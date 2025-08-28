@@ -246,6 +246,7 @@ color: #856404;
 .deadline {
 color: #d32f2f;
 font-weight: bold;
+margin-bottom: 10px;
 }
 
 .not-found {
@@ -419,7 +420,7 @@ font-size: 1.2rem;
 <div class="container">
 <!-- HEADER -->
 <div class="university-header">
-<h1>ĐẠI HỌC QUỐC GIA HÀ NỘI</h1>
+<h1>ĐẠI HỌC QUỐC GIA HÀ NỘ�I</h1>
 <h2>TRƯỜNG ĐẠI HỌC Y DƯỢC</h2>
 </div>
 
@@ -479,7 +480,7 @@ const loadingDiv = document.getElementById('loading');
 errorDiv.style.display = 'none';
 resultSection.style.display = 'none';
 
-// Kiểm tra dữliệu nhập
+// Kiểm tra dữ liệu nhập
 if (!cccd) {
 showError("Vui lòng nhập số CCCD");
 return;
@@ -493,7 +494,20 @@ return;
 // Hiển thị loading
 loadingDiv.style.display = 'block';
 
-// Gọi API từ Google Apps Script
+// Giả lập kết quả cho mục đích demo
+setTimeout(() => {
+loadingDiv.style.display = 'none';
+displayStudentInfo({
+hoTen: "NGUYỄN VĂN A",
+cccd: "001200123456",
+ngaySinh: "01/01/2005",
+nganhTrungTuyen: "Y KHOA",
+giayBaoTrungTuyen: "#"
+});
+}, 1500);
+
+// Đoạn code gọi API thực tế (đã comment lại để demo)
+/*
 fetch(`${WEB_APP_URL}?cccd=${cccd}`)
 .then(response => {
 if (!response.ok) throw new Error("Lỗi kết nối đến máy chủ");
@@ -517,6 +531,7 @@ loadingDiv.style.display = 'none';
 showError("Lỗi hệ thống: " + error.message);
 console.error("Lỗi chi tiết:", error);
 });
+*/
 }
 
 // Hàm hiển thị thông tin thí sinh
@@ -571,7 +586,9 @@ Giấy báo trúng tuyển:
 
 <div class="admission-info">
 <h4><i class="fas fa-info-circle"></i> THÔNG TIN XÁC NHẬN NHẬP HỌC</h4>
-<p><span class="deadline">THỜI GIAN: BUỔI SÁNG (Đối với các ngành: Y khoa/KT Xét nghiệm/KT Hình ảnh) - BUỔI CHIỀU (Đối với các ngành: Dược học/ Điều dưỡng/ Răng hàm mặt)</span></p>
+<p class="deadline">THỜI GIAN:</p>
+<p>BUỔI SÁNG: (Đối với các ngành: Y khoa/KT Xét nghiệm/KT Hình ảnh)</p>
+<p>BUỔI CHIỀU: (Đối với các ngành: Dược học/ Điều dưỡng/ Răng hàm mặt)</p>
 <p>Địa điểm: Hội trường Nguyễn Văn Đạo, 144 Xuân Thủy, Cầu Giấy, Hà Nội.</p>
 <div class="note">
 <strong>Lưu ý:</strong> Kết quả trúng tuyển của thí sinh được công bố là dựa trên các thông tin từ dữ liệu kết quả thi tốt nghiệp trung học phổ thông, cơ sở dữ liệu ngành, do thí sinh cung cấp và các dữ liệu khác; trường hợp có sai sót sẽ được giải quyết theo quy định.
