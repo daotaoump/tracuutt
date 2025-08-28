@@ -1,591 +1,621 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Tra Cứu Thí Sinh - ĐH Y Dược, ĐHQGHN</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #1a365c, #8e1e2d);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 800px;
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-        
-        .university-header {
-            background: #0c3264;
-            color: white;
-            padding: 25px;
-            text-align: center;
-            position: relative;
-        }
-        
-        .university-header::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 5%;
-            right: 5%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #ffffff, transparent);
-        }
-        
-        .university-header h1 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-        
-        .university-header h2 {
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-            letter-spacing: 1px;
-        }
-        
-        .system-title {
-            background: #1a4d8c;
-            color: white;
-            padding: 18px;
-            text-align: center;
-            font-size: 1.3rem;
-            font-weight: 500;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-        }
-        
-        .search-section {
-            padding: 30px;
-            background: #f8f9fa;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        
-        .search-box {
-            display: flex;
-            margin: 0 auto;
-            max-width: 600px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            border-radius: 50px;
-            overflow: hidden;
-        }
-        
-        .search-box input {
-            flex: 1;
-            padding: 16px 25px;
-            border: none;
-            font-size: 1.1rem;
-            outline: none;
-            background: #fff;
-        }
-        
-        .search-box button {
-            background: #e63946;
-            color: white;
-            border: none;
-            padding: 0 30px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        
-        .search-box button:hover {
-            background: #c1121f;
-        }
-        
-        .search-box button i {
-            margin-right: 8px;
-        }
-        
-        .error {
-            background: #ffebee;
-            color: #d32f2f;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 20px auto 0;
-            max-width: 600px;
-            display: none;
-            font-weight: 500;
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 30px;
-            display: none;
-        }
-        
-        .loading-spinner {
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #0c3264;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .result-section {
-            padding: 30px;
-            display: none;
-        }
-        
-        .result-title {
-            color: #0c3264;
-            text-align: center;
-            margin-bottom: 25px;
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-        
-        .info-card {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 25px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-        
-        .info-item {
-            display: flex;
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        
-        .info-item:last-child {
-            margin-bottom: 0;
-            padding-bottom: 0;
-            border-bottom: none;
-        }
-        
-        .info-label {
-            font-weight: 600;
-            color: #0c3264;
-            min-width: 180px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .info-label i {
-            font-size: 18px;
-            width: 24px;
-        }
-        
-        .info-value {
-            flex: 1;
-            font-weight: 500;
-        }
-        
-        .admission-info {
-            background: #e8f5e9;
-            border-left: 4px solid #28a745;
-            padding: 20px;
-            border-radius: 8px;
-        }
-        
-        .admission-info h4 {
-            color: #28a745;
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-        }
-        
-        .admission-info p {
-            margin-bottom: 10px;
-            line-height: 1.6;
-        }
-        
-        .admission-info a {
-            color: #0c3264;
-            font-weight: 600;
-            text-decoration: none;
-        }
-        
-        .admission-info a:hover {
-            text-decoration: underline;
-        }
-        
-        .note {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 15px;
-            margin-top: 15px;
-            border-radius: 5px;
-            font-size: 0.95rem;
-            color: #856404;
-        }
-        
-        .deadline {
-            color: #d32f2f;
-            font-weight: bold;
-        }
-        
-        .not-found {
-            text-align: center;
-            padding: 30px;
-        }
-        
-        .not-found i {
-            font-size: 64px;
-            color: #d32f2f;
-            margin-bottom: 20px;
-        }
-        
-        .not-found h3 {
-            color: #d32f2f;
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-        }
-        
-        .contact-info {
-            background: #e3f2fd;
-            border-left: 4px solid #0c3264;
-            padding: 20px;
-            margin-top: 20px;
-            border-radius: 8px;
-        }
-        
-        .contact-info h4 {
-            color: #0c3264;
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-        }
-        
-        .contact-item {
-            margin-bottom: 15px;
-            display: flex;
-            align-items: flex-start;
-        }
-        
-        .contact-item:last-child {
-            margin-bottom: 0;
-        }
-        
-        .contact-item i {
-            color: #0c3264;
-            font-size: 18px;
-            min-width: 24px;
-            margin-right: 10px;
-            margin-top: 3px;
-        }
-        
-        .contact-item a {
-            color: #0c3264;
-            font-weight: 600;
-            text-decoration: none;
-        }
-        
-        .contact-item a:hover {
-            text-decoration: underline;
-        }
-        
-        .success-badge {
-            background-color: #28a745;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            display: inline-block;
-            margin-left: 10px;
-        }
-        
-        .hotline-info {
-            background: #e3f2fd;
-            border-left: 4px solid #0c3264;
-            padding: 20px;
-            margin-top: 20px;
-            border-radius: 8px;
-            text-align: center;
-        }
-        
-        .hotline-info h4 {
-            color: #0c3264;
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-        }
-        
-        .hotline-info a {
-            color: #0c3264;
-            font-weight: 600;
-            text-decoration: none;
-            font-size: 1.2rem;
-        }
-        
-        .hotline-info a:hover {
-            text-decoration: underline;
-        }
-        
-        .footer {
-            text-align: center;
-            padding: 20px;
-            background: #0c3264;
-            color: white;
-            font-size: 14px;
-        }
-        
-        .footer a {
-            color: #ffffff;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        
-        .footer a:hover {
-            text-decoration: underline;
-        }
-        
-        @media (max-width: 768px) {
-            .search-box {
-                flex-direction: column;
-                border-radius: 10px;
-            }
-            
-            .search-box input {
-                padding: 15px;
-                border-radius: 10px 10px 0 0;
-            }
-            
-            .search-box button {
-                padding: 15px;
-                border-radius: 0 0 10px 10px;
-            }
-            
-            .info-item {
-                flex-direction: column;
-                gap: 8px;
-            }
-            
-            .info-label {
-                min-width: 100%;
-            }
-            
-            .university-header h1 {
-                font-size: 1.5rem;
-            }
-            
-            .university-header h2 {
-                font-size: 1.2rem;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hệ Thống Tra Cứu Thí Sinh - Trường ĐH Y Dược, ĐHQGHN</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+background: linear-gradient(135deg, #1a365c, #8e1e2d);
+min-height: 100vh;
+display: flex;
+justify-content: center;
+align-items: center;
+padding: 20px;
+}
+
+.container {
+width: 100%;
+max-width: 800px;
+background: white;
+border-radius: 15px;
+overflow: hidden;
+box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.university-header {
+background: #0c3264;
+color: white;
+padding: 25px;
+text-align: center;
+position: relative;
+}
+
+.university-header::after {
+content: "";
+position: absolute;
+bottom: 0;
+left: 5%;
+right: 5%;
+height: 2px;
+background: linear-gradient(90deg, transparent, #ffffff, transparent);
+}
+
+.university-header h1 {
+font-size: 1.8rem;
+margin-bottom: 10px;
+font-weight: 700;
+text-transform: uppercase;
+}
+
+.university-header h2 {
+font-size: 1.4rem;
+font-weight: 600;
+margin-bottom: 20px;
+letter-spacing: 1px;
+}
+
+.system-title {
+background: #1a4d8c;
+color: white;
+padding: 18px;
+text-align: center;
+font-size: 1.3rem;
+font-weight: 500;
+text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.search-section {
+padding: 30px;
+background: #f8f9fa;
+border-bottom: 1px solid #e0e0e0;
+}
+
+.search-box {
+display: flex;
+margin: 0 auto;
+max-width: 600px;
+box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+border-radius: 50px;
+overflow: hidden;
+}
+
+.search-box input {
+flex: 1;
+padding: 16px 25px;
+border: none;
+font-size: 1.1rem;
+outline: none;
+background: #fff;
+}
+
+.search-box button {
+background: #e63946;
+color: white;
+border: none;
+padding: 0 30px;
+font-size: 1.1rem;
+font-weight: 600;
+cursor: pointer;
+transition: background 0.3s;
+}
+
+.search-box button:hover {
+background: #c1121f;
+}
+
+.search-box button i {
+margin-right: 8px;
+}
+
+.error {
+background: #ffebee;
+color: #d32f2f;
+padding: 15px;
+border-radius: 8px;
+margin: 20px auto 0;
+max-width: 600px;
+display: none;
+font-weight: 500;
+}
+
+.loading {
+text-align: center;
+padding: 30px;
+display: none;
+}
+
+.loading-spinner {
+border: 5px solid #f3f3f3;
+border-top: 5px solid #0c3264;
+border-radius: 50%;
+width: 50px;
+height: 50px;
+animation: spin 1s linear infinite;
+margin: 0 auto 20px;
+}
+
+@keyframes spin {
+0% { transform: rotate(0deg); }
+100% { transform: rotate(360deg); }
+}
+
+.result-section {
+padding: 30px;
+display: none;
+}
+
+.result-title {
+color: #0c3264;
+text-align: center;
+margin-bottom: 25px;
+font-size: 1.5rem;
+font-weight: 600;
+}
+
+.info-card {
+background: #f8f9fa;
+border-radius: 10px;
+padding: 25px;
+box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+margin-bottom: 20px;
+}
+
+.info-item {
+display: flex;
+margin-bottom: 20px;
+padding-bottom: 20px;
+border-bottom: 1px solid #e0e0e0;
+}
+
+.info-item:last-child {
+margin-bottom: 0;
+padding-bottom: 0;
+border-bottom: none;
+}
+
+.info-label {
+font-weight: 600;
+color: #0c3264;
+min-width: 180px;
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.info-label i {
+font-size: 18px;
+width: 24px;
+}
+
+.info-value {
+flex: 1;
+font-weight: 500;
+}
+
+.admission-info {
+background: #e8f5e9;
+border-left: 4px solid #28a745;
+padding: 20px;
+border-radius: 8px;
+}
+
+.admission-info h4 {
+color: #28a745;
+margin-bottom: 15px;
+font-size: 1.1rem;
+}
+
+.admission-info p {
+margin-bottom: 10px;
+line-height: 1.6;
+}
+
+.admission-info a {
+color: #0c3264;
+font-weight: 600;
+text-decoration: none;
+}
+
+.admission-info a:hover {
+text-decoration: underline;
+}
+
+.note {
+background: #fff3cd;
+border-left: 4px solid #ffc107;
+padding: 15px;
+margin-top: 15px;
+border-radius: 5px;
+font-size: 0.95rem;
+color: #856404;
+}
+
+.deadline {
+color: #d32f2f;
+font-weight: bold;
+}
+
+.not-found {
+text-align: center;
+padding: 30px;
+}
+
+.not-found i {
+font-size: 64px;
+color: #d32f2f;
+margin-bottom: 20px;
+}
+
+.not-found h3 {
+color: #d32f2f;
+margin-bottom: 15px;
+font-size: 1.3rem;
+}
+
+.contact-info {
+background: #e3f2fd;
+border-left: 4px solid #0c3264;
+padding: 20px;
+margin-top: 20px;
+border-radius: 8px;
+}
+
+.contact-info h4 {
+color: #0c3264;
+margin-bottom: 15px;
+font-size: 1.1rem;
+}
+
+.contact-item {
+margin-bottom: 15px;
+display: flex;
+align-items: flex-start;
+}
+
+.contact-item:last-child {
+margin-bottom: 0;
+}
+
+.contact-item i {
+color: #0c3264;
+font-size: 18px;
+min-width: 24px;
+margin-right: 10px;
+margin-top: 3px;
+}
+
+.contact-item a {
+color: #0c3264;
+font-weight: 600;
+text-decoration: none;
+}
+
+.contact-item a:hover {
+text-decoration: underline;
+}
+
+.success-badge {
+background-color: #28a745;
+color: white;
+padding: 5px 10px;
+border-radius: 20px;
+font-size: 14px;
+font-weight: 600;
+display: inline-block;
+margin-left: 10px;
+}
+
+.hotline-info {
+background: #e3f2fd;
+border-left: 4px solid #0c3264;
+padding: 20px;
+margin-top: 20px;
+border-radius: 8px;
+text-align: center;
+}
+
+.hotline-info h4 {
+color: #0c3264;
+margin-bottom: 15px;
+font-size: 1.1rem;
+}
+
+.hotline-info a {
+color: #0c3264;
+font-weight: 600;
+text-decoration: none;
+font-size: 1.2rem;
+}
+
+.hotline-info a:hover {
+text-decoration: underline;
+}
+
+.footer {
+text-align: center;
+padding: 20px;
+background: #0c3264;
+color: white;
+font-size: 14px;
+}
+
+.footer a {
+color: #ffffff;
+text-decoration: none;
+font-weight: 600;
+}
+
+.footer a:hover {
+text-decoration: underline;
+}
+
+.download-link {
+display: inline-block;
+background-color: #0c3264;
+color: white;
+padding: 10px 20px;
+border-radius: 5px;
+text-decoration: none;
+font-weight: 600;
+margin-top: 10px;
+transition: background-color 0.3s;
+}
+
+.download-link:hover {
+background-color: #1a4d8c;
+text-decoration: none;
+color: white;
+}
+
+@media (max-width: 768px) {
+.search-box {
+flex-direction: column;
+border-radius: 10px;
+}
+
+.search-box input {
+padding: 15px;
+border-radius: 10px 10px 0 0;
+}
+
+.search-box button {
+padding: 15px;
+border-radius: 0 0 10px 10px;
+}
+
+.info-item {
+flex-direction: column;
+gap: 8px;
+}
+
+.info-label {
+min-width: 100%;
+}
+
+.university-header h1 {
+font-size: 1.5rem;
+}
+
+.university-header h2 {
+font-size: 1.2rem;
+}
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <!-- HEADER -->
-        <div class="university-header">
-            <h1>ĐẠI HỌC QUỐC GIA HÀ NỘI</h1>
-            <h2>TRƯỜNG ĐẠI HỌC Y DƯỢC</h2>
-        </div>
-        
-        <div class="system-title">
-            HỆ THỐNG TRA CỨU THÔNG TIN TRÚNG TUYỂN
-        </div>
-        
-        <!-- SEARCH SECTION -->
-        <div class="search-section">
-            <div class="search-box">
-                <input 
-                    type="text" 
-                    id="cccd" 
-                    placeholder="Nhập số căn cước công dân (12 số)"
-                    maxlength="12"
-                    required
-                >
-                <button onclick="searchStudent()">
-                    <i class="fas fa-search"></i> Tra Cứu
-                </button>
-            </div>
-            
-            <div class="error" id="errorMessage"></div>
-            
-            <div class="loading" id="loading">
-                <div class="loading-spinner"></div>
-                <p>Đang tìm kiếm thông tin...</p>
-            </div>
-        </div>
-        
-        <!-- RESULT SECTION -->
-        <div class="result-section" id="resultSection">
-            <!-- Nội dung sẽ được cập nhật bởi JavaScript -->
-        </div>
-        
-        <!-- FOOTER -->
-        <div class="footer">
-            <p>Hệ thống tra cứu kết quả trúng tuyển © 2025 | <a href="#">Trường Đại học Y Dược, ĐHQGHN</a></p>
-        </div>
-    </div>
+<div class="container">
+<!-- HEADER -->
+<div class="university-header">
+<h1>ĐẠI HỌC QUỐC GIA HÀ NỘI</h1>
+<h2>TRƯỜNG ĐẠI HỌC Y DƯỢC</h2>
+</div>
 
-    <script>
-        // ======= CẤU HÌNH QUAN TRỌNG =======
-        // Thay thế URL dưới đây bằng URL Web App của bạn từ Google Apps Script
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx-Myn1vP_AROrHpYkALS-679SNWGaxiO_ypV-bRkZwEjq1TVi3hSddHH0IdisN8FJ_/exec";
-        // ===================================
-        
-        // Hàm tra cứu thông tin thí sinh
-        function searchStudent() {
-            const cccdInput = document.getElementById('cccd');
-            const cccd = cccdInput.value.trim();
-            const errorDiv = document.getElementById('errorMessage');
-            const resultSection = document.getElementById('resultSection');
-            const loadingDiv = document.getElementById('loading');
-            
-            // Ẩn các phần tử không cần thiết
-            errorDiv.style.display = 'none';
-            resultSection.style.display = 'none';
-            
-            // Kiểm tra dữ liệu nhập
-            if (!cccd) {
-                showError("Vui lòng nhập số CCCD");
-                return;
-            }
-            
-            if (!/^\d{12}$/.test(cccd)) {
-                showError("Số CCCD phải có đúng 12 chữ số");
-                return;
-            }
-            
-            // Hiển thị loading
-            loadingDiv.style.display = 'block';
-            
-            // Gọi API từ Google Apps Script
-            fetch(`${WEB_APP_URL}?cccd=${cccd}`)
-                .then(response => {
-                    if (!response.ok) throw new Error("Lỗi kết nối đến máy chủ");
-                    return response.json();
-                })
-                .then(data => {
-                    loadingDiv.style.display = 'none';
-                    
-                    if (data.status === "success") {
-                        // Hiển thị thông tin thí sinh trúng tuyển
-                        displayStudentInfo(data.data);
-                    } else if (data.message === "NOT_FOUND") {
-                        // Hiển thị thông báo không tìm thấy
-                        displayNotFound();
-                    } else {
-                        showError(data.message || "Lỗi không xác định từ máy chủ");
-                    }
-                })
-                .catch(error => {
-                    loadingDiv.style.display = 'none';
-                    showError("Lỗi hệ thống: " + error.message);
-                    console.error("Lỗi chi tiết:", error);
-                });
-        }
-        
-        // Hàm hiển thị thông tin thí sinh
-        function displayStudentInfo(data) {
-            const resultSection = document.getElementById('resultSection');
-            
-            resultSection.innerHTML = `
-                <h2 class="result-title"><i class="fas fa-trophy"></i> KẾT QUẢ TRÚNG TUYỂN</h2>
-                <div class="info-card">
-                    <div class="info-item">
-                        <div class="info-label">
-                            <i class="fas fa-user"></i>
-                            Họ và tên:
-                        </div>
-                        <div class="info-value">${data.hoTen || "-"}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">
-                            <i class="fas fa-id-card"></i>
-                            Số CCCD:
-                        </div>
-                        <div class="info-value">${data.cccd || "-"}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">
-                            <i class="fas fa-birthday-cake"></i>
-                            Ngày sinh:
-                        </div>
-                        <div class="info-value">${data.ngaySinh || "-"}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">
-                            <i class="fas fa-book"></i>
-                            Ngành trúng tuyển:
-                        </div>
-                        <div class="info-value">${data.nganhTrungTuyen || "-"} <span class="success-badge">Trúng tuyển</span></div>
-                    </div>
-                </div>
-                
-                <div class="admission-info">
-                    <h4><i class="fas fa-info-circle"></i> THÔNG TIN XÁC NHẬN NHẬP HỌC</h4>
-                    <p><span class="deadline">Trước 17 giờ 00 ngày 30/8/2025</span>, thí sinh có kết quả trúng tuyển phải xác nhận nhập học trực tuyến qua tài khoản thí sinh trên hệ thống tuyển sinh của Bộ Giáo dục và Đào tạo.</p>
-                    <p>Địa chỉ truy cập: <a href="https://thisinh.thithptquocgia.edu.vn/" target="_blank">https://thisinh.thithptquocgia.edu.vn/</a></p>
-                    <div class="note">
-                        <strong>Lưu ý:</strong> Kết quả trúng tuyển của thí sinh được công bố là dựa trên các thông tin từ dữ liệu kết quả thi tốt nghiệp trung học phổ thông, cơ sở dữ liệu ngành, do thí sinh cung cấp và các dữ liệu khác; trường hợp có sai sót sẽ được giải quyết theo quy định.
-                    </div>
-                </div>
-            `;
-            
-            resultSection.style.display = 'block';
-        }
-        
-        // Hàm hiển thị thông báo không tìm thấy
-        function displayNotFound() {
-            const resultSection = document.getElementById('resultSection');
-            
-            resultSection.innerHTML = `
-                <div class="not-found">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <h3>KHÔNG CÓ THÔNG TIN</h3>
-                    <p>Không tìm thấy thông tin trúng tuyển cho số CCCD đã nhập.</p>
-                    <div class="hotline-info">
-                        <h4>Thắc mắc về kết quả trúng tuyển</h4>
-                        <p>Thí sinh vui lòng liên hệ theo số Hotline: <a href="tel:0911430050">0911.430.050</a></p>
-                    </div>
-                </div>
-            `;
-            
-            resultSection.style.display = 'block';
-        }
-        
-        // Hàm hiển thị thông báo lỗi
-        function showError(message) {
-            const errorDiv = document.getElementById('errorMessage');
-            errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
-            errorDiv.style.display = 'block';
-            
-            // Tự động ẩn thông báo lỗi sau 5 giây
-            setTimeout(() => {
-                errorDiv.style.display = 'none';
-            }, 5000);
-        }
-        
-        // Cho phép nhấn Enter để tra cứu
-        document.getElementById('cccd').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                searchStudent();
-            }
-        });
-    </script>
+<div class="system-title">
+HỆ THỐNG TRA CỨU THÔNG TIN TRÚNG TUYỂN
+</div>
+
+<!-- SEARCH SECTION -->
+<div class="search-section">
+<div class="search-box">
+<input 
+type="text" 
+id="cccd" 
+placeholder="Nhập số căn cước công dân (12 số)"
+maxlength="12"
+required
+>
+<button onclick="searchStudent()">
+<i class="fas fa-search"></i> Tra Cứu
+</button>
+</div>
+
+<div class="error" id="errorMessage"></div>
+
+<div class="loading" id="loading">
+<div class="loading-spinner"></div>
+<p>Đang tìm kiếm thông tin...</p>
+</div>
+</div>
+
+<!-- RESULT SECTION -->
+<div class="result-section" id="resultSection">
+<!-- Nội dung sẽ được cập nhật bởi JavaScript -->
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+<p>Hệ thống tra cứu kết quả trúng tuyển © 2025 | <a href="#">Trường Đại học Y Dược, ĐHQGHN</a></p>
+</div>
+</div>
+
+<script>
+// ======= CẤU HÌNH QUAN TRỌNG =======
+// Thay thế URL dưới đây bằng URL Web App của bạn từ Google Apps Script
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwWK__Of7B-ddtO5g6oQ2a3W44tsfk7MVoykhhMILLI-i5_R1NSvqtUMYqTFaTPhlHj/exec";
+// ===================================
+
+// Hàm tra cứu thông tin thí sinh
+function searchStudent() {
+const cccdInput = document.getElementById('cccd');
+const cccd = cccdInput.value.trim();
+const errorDiv = document.getElementById('errorMessage');
+const resultSection = document.getElementById('resultSection');
+const loadingDiv = document.getElementById('loading');
+
+// Ẩn các phần tử không cần thiết
+errorDiv.style.display = 'none';
+resultSection.style.display = 'none';
+
+// Kiểm tra dữliệu nhập
+if (!cccd) {
+showError("Vui lòng nhập số CCCD");
+return;
+}
+
+if (!/^\d{12}$/.test(cccd)) {
+showError("Số CCCD phải có đúng 12 chữ số");
+return;
+}
+
+// Hiển thị loading
+loadingDiv.style.display = 'block';
+
+// Gọi API từ Google Apps Script
+fetch(`${WEB_APP_URL}?cccd=${cccd}`)
+.then(response => {
+if (!response.ok) throw new Error("Lỗi kết nối đến máy chủ");
+return response.json();
+})
+.then(data => {
+loadingDiv.style.display = 'none';
+
+if (data.status === "success") {
+// Hiển thị thông tin thí sinh trúng tuyển
+displayStudentInfo(data.data);
+} else if (data.message === "NOT_FOUND") {
+// Hiển thị thông báo không tìm thấy
+displayNotFound();
+} else {
+showError(data.message || "Lỗi không xác định từ máy chủ");
+}
+})
+.catch(error => {
+loadingDiv.style.display = 'none';
+showError("Lỗi hệ thống: " + error.message);
+console.error("Lỗi chi tiết:", error);
+});
+}
+
+// Hàm hiển thị thông tin thí sinh
+function displayStudentInfo(data) {
+const resultSection = document.getElementById('resultSection');
+
+resultSection.innerHTML = `
+<h2 class="result-title"><i class="fas fa-trophy"></i> KẾT QUẢ TRÚNG TUYỂN</h2>
+<div class="info-card">
+<div class="info-item">
+<div class="info-label">
+<i class="fas fa-user"></i>
+Họ và tên:
+</div>
+<div class="info-value">${data.hoTen || "-"}</div>
+</div>
+<div class="info-item">
+<div class="info-label">
+<i class="fas fa-id-card"></i>
+Số CCCD:
+</div>
+<div class="info-value">${data.cccd || "-"}</div>
+</div>
+<div class="info-item">
+<div class="info-label">
+<i class="fas fa-birthday-cake"></i>
+Ngày sinh:
+</div>
+<div class="info-value">${data.ngaySinh || "-"}</div>
+</div>
+<div class="info-item">
+<div class="info-label">
+<i class="fas fa-book"></i>
+Ngành trúng tuyển:
+</div>
+<div class="info-value">${data.nganhTrungTuyen || "-"} <span class="success-badge">Trúng tuyển</span></div>
+</div>
+${data.giayBaoTrungTuyen ? `
+<div class="info-item">
+<div class="info-label">
+<i class="fas fa-file-pdf"></i>
+Giấy báo trúng tuyển:
+</div>
+<div class="info-value">
+<a href="${data.giayBaoTrungTuyen}" target="_blank" class="download-link">
+<i class="fas fa-download"></i> Tải giấy báo trúng tuyển
+</a>
+</div>
+</div>
+` : ''}
+</div>
+
+<div class="admission-info">
+<h4><i class="fas fa-info-circle"></i> THÔNG TIN XÁC NHẬN NHẬP HỌC</h4>
+<p><span class="deadline">Trước 17 giờ 00 ngày 30/8/2025</span>, thí sinh có kết quả trúng tuyển phải xác nhận nhập học trực tuyến qua tài khoản thí sinh trên hệ thống tuyển sinh của Bộ Giáo dục và Đào tạo.</p>
+<p>Địa chỉ truy cập: <a href="https://thisinh.thithptquocgia.edu.vn/" target="_blank">https://thisinh.thithptquocgia.edu.vn/</a></p>
+<div class="note">
+<strong>Lưu ý:</strong> Kết quả trúng tuyển của thí sinh được công bố là dựa trên các thông tin từ dữ liệu kết quả thi tốt nghiệp trung học phổ thông, cơ sở dữ liệu ngành, do thí sinh cung cấp và các dữ liệu khác; trường hợp có sai sót sẽ được giải quyết theo quy định.
+</div>
+</div>
+`;
+
+resultSection.style.display = 'block';
+}
+
+// Hàm hiển thị thông báo không tìm thấy
+function displayNotFound() {
+const resultSection = document.getElementById('resultSection');
+
+resultSection.innerHTML = `
+<div class="not-found">
+<i class="fas fa-exclamation-circle"></i>
+<h3>KHÔNG CÓ THÔNG TIN</h3>
+<p>Không tìm thấy thông tin trúng tuyển cho số CCCD đã nhập.</p>
+<div class="hotline-info">
+<h4>Thắc mắc về kết quả trúng tuyển</h4>
+<p>Thí sinh vui lòng liên hệ theo số Hotline: <a href="tel:0911430050">0911.430.050</a></p>
+</div>
+</div>
+`;
+
+resultSection.style.display = 'block';
+}
+
+// Hàm hiển thị thông báo lỗi
+function showError(message) {
+const errorDiv = document.getElementById('errorMessage');
+errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+errorDiv.style.display = 'block';
+
+// Tự động ẩn thông báo lỗi sau 5 giây
+setTimeout(() => {
+errorDiv.style.display = 'none';
+}, 5000);
+}
+
+// Cho phép nhấn Enter để tra cứu
+document.getElementById('cccd').addEventListener('keypress', function(e) {
+if (e.key === 'Enter') {
+searchStudent();
+}
+});
+</script>
 </body>
+
 </html>
-
-
